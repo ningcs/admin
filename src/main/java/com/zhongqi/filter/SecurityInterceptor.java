@@ -1,6 +1,5 @@
 package com.zhongqi.filter;
 
-import com.zhongqi.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +9,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 
 
 @Component
@@ -39,17 +37,14 @@ public class SecurityInterceptor implements HandlerInterceptor {
 		LOGGER.info("执行请求为：{}",request.getRequestURI());
 
 
-//		Object ssoUser = request.getSession().getAttribute("AuthSpId");
-
-//		LOGGER.info("获取session的值为：{}",ssoUser);
-
-//		if (ssoUser == null) {
-//			LOGGER.info("鉴权未通过,跳转首页{}",sdltServer);
-//            response.sendRedirect(sdltServer);
-//            return false;
-//        }
-		User user =null;
-		if (user==null){
+		if(request.getRequestURI().equals("/login") || request.getRequestURI().equals("/common/createCaptcha")
+			|| request.getRequestURI().equals("/admin/login") || request.getRequestURI().equals("/common/checkCaptcha")
+				){
+			return true;
+		}
+		Object ssoUser = request.getSession().getAttribute("user");
+		LOGGER.info("获取session的值为：{}",ssoUser);
+		if (ssoUser==null){
 			//			LOGGER.info("鉴权未通过,跳转首页{}",sdltServer);
             response.sendRedirect("/login");
             return false;
