@@ -2,7 +2,6 @@ package com.zhongqi.filter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,8 +15,8 @@ public class SecurityInterceptor implements HandlerInterceptor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SecurityInterceptor.class);
 	
-	@Value("${sdltServer}")
-	private String sdltServer;
+//	@Value("${sdltServer}")
+//	private String sdltServer;
 	/**
 	 *
 	 * 请求处理之前处理
