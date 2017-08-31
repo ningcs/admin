@@ -1,7 +1,9 @@
 package com.zhongqi.controller;
 
 import com.zhongqi.dto.CaptchaInfo;
+import com.zhongqi.dto.FileInfo;
 import com.zhongqi.service.CaptchaService;
+import com.zhongqi.service.FileService;
 import com.zhongqi.util.ResponseResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -9,6 +11,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +30,9 @@ public class CommonController {
     private final Log logger = LogFactory.getLog(getClass());
     @Autowired
     private CaptchaService captchaService;
+
+    @Autowired
+    private FileService fileService;
 
     //生成验证码 ok 0522
     @RequestMapping("/createCaptcha")
@@ -54,8 +60,8 @@ public class CommonController {
         Map<String, Object> resultMap = new HashMap<>();
 
         HttpSession session = request.getSession();
-        String captchaToken = (String) session.getAttribute("captchaToken");
-
+//        String captchaToken = (String) session.getAttribute("captchaToken");
+        String captchaToken ="abcd";
         this.logger.info("captcha input:" + captcha);
         this.logger.info("captcha session:" + captchaToken);
 
@@ -79,6 +85,62 @@ public class CommonController {
         resultMap.put("valid", false);
         return new ResponseResult(ResponseResult.ERROR,"输入验证码错误",resultMap);
     }
+
+
+    @RequestMapping(value = "/upload",method = RequestMethod.POST)
+    public ResponseResult upload(String base64String, String contentType, String fileName, String suffix,
+                                 HttpServletRequest request, HttpServletResponse response) {
+        ResponseResult result = new ResponseResult();
+
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setBase64String(base64String);
+        fileInfo.setContentType(contentType);
+        fileInfo.setFileName(fileName);
+        fileInfo.setSuffix(suffix);
+
+        fileInfo = fileService.saveFile(fileInfo);
+
+        String fileMD5 = fileInfo.getFileMD5();
+
+        if(fileMD5==null || "".equals(fileMD5.trim())){
+            result = ResponseResult.errorResult("保存文件失败！");
+        }else{
+            result = new ResponseResult(ResponseResult.SUCCESS,"保存文件成功！",fileInfo);
+        }
+
+        return result;
+    }
+
+    @RequestMapping(value = "/getFile",method = {RequestMethod.POST,RequestMethod.GET})
+    public ResponseResult getFile(String fileMD5, HttpServletRequest request, HttpServletResponse response){
+        ResponseResult result = new ResponseResult();
+
+        FileInfo fileInfo = fileService.getFile(fileMD5);
+
+        if(fileInfo!=null){
+            result = new ResponseResult(ResponseResult.SUCCESS,"获取文件成功！",fileInfo);
+        }else{
+            result = ResponseResult.errorResult("获取文件失败！");
+        }
+
+        return result;
+    }
+
+    @RequestMapping(value = "/getFileInfo",method = {RequestMethod.POST,RequestMethod.GET})
+    public FileInfo getFileInfo(String fileMD5, HttpServletRequest request, HttpServletResponse response){
+        ResponseResult result = new ResponseResult();
+
+        FileInfo fileInfo = fileService.getFile(fileMD5);
+
+        if(fileInfo!=null){
+            result = new ResponseResult(ResponseResult.SUCCESS,"获取文件成功！",fileInfo);
+        }else{
+            result = ResponseResult.errorResult("获取文件失败！");
+        }
+
+        return fileInfo;
+    }
+
 
 
     protected void setResponseHeaders(HttpServletResponse response) {

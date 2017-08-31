@@ -22,7 +22,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public User login(String name, String password) {
         Map<String,Object> params =new HashedMap();
-        String sql ="select * from user where name=:name and password=:password";
+        String sql ="select * from User where name=:name and password=:password";
         params.put("name",name);
         params.put("password",password);
         User user =null;

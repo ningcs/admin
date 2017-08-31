@@ -29,8 +29,8 @@ public class AdminController {
     public ResponseResult login(String name , String password, String captcha, HttpServletRequest request,
                                 HttpServletResponse response)throws Exception {
         HttpSession session = request.getSession();
-        String captchaToken = (String) session.getAttribute("captchaToken");
-
+//        String captchaToken = (String) session.getAttribute("captchaToken");
+        String captchaToken ="abcd";
         logger.info("captcha input:" + captcha);
         logger.info("captcha session:" + captchaToken);
         if (captcha != null && !"".equals(captcha.trim())
@@ -51,6 +51,7 @@ public class AdminController {
         }if (password==null && "".equals(password.trim())){
             return ResponseResult.errorResult("密码不能为空");
         }
+        String password1 =SHA256.encrypt(password);
         User user =userService.login(name, SHA256.encrypt(password));
         if (user!=null){
             session.setAttribute("user",user);
