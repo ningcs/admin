@@ -1,6 +1,6 @@
 package com.zhongqi.service.impl;
 
-import com.zhongqi.dao.CommonFileJpaDao;
+import com.zhongqi.dao.CommonFileDao;
 import com.zhongqi.dto.FileInfo;
 import com.zhongqi.entity.CommonFile;
 import com.zhongqi.service.FileService;
@@ -11,6 +11,7 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.io.File;
@@ -29,7 +30,7 @@ public class FileServiceImpl implements FileService {
     String sysBasePath;
 
     @Autowired
-    private CommonFileJpaDao commonFileDao;
+    private CommonFileDao commonFileDao;
 
     @Override
     public FileInfo saveFile(FileInfo fileInfo) {
@@ -61,16 +62,10 @@ public class FileServiceImpl implements FileService {
 
             try {
                 FileUtils.writeByteArrayToFile(file, fileBytes);
-                CommonFile commonFile = new CommonFile();
-                commonFile.setFileMD5(fileMD5);
-                commonFile.setContentType(fileInfo.getContentType());
-                commonFile.setFileName(fileInfo.getFileName());
-                commonFile.setSuffix(fileInfo.getSuffix());
-                commonFile.setFilePath(filePath);
-                commonFile.setCreateTime(new Date());
-
-                commonFile = commonFileDao.save(commonFile);
-
+                fileInfo.setFileMD5(fileMD5);
+                fileInfo.setFilePath(filePath);
+                this.add(fileInfo);
+                CommonFile commonFile= commonFileDao.findByFileMD5(fileMD5);
                 if(commonFile!=null){
                     Integer fileId = commonFile.getId();
                     if (fileId != null && fileId != 0) {
@@ -90,6 +85,12 @@ public class FileServiceImpl implements FileService {
         fileInfo.setFilePath(filePath);
 
         return fileInfo;
+    }
+
+    @Override
+    @Transactional
+    public void add(FileInfo fileInfo) {
+        commonFileDao.add(fileInfo);
     }
 
     @Override
@@ -113,6 +114,7 @@ public class FileServiceImpl implements FileService {
                 fileInfo.setFileName(commonFile.getFileName());
                 fileInfo.setSuffix(commonFile.getSuffix());
                 fileInfo.setFilePath(commonFile.getFilePath());
+                fileInfo.setSuffixName(commonFile.getSuffix().replace(".",""));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -122,6 +124,8 @@ public class FileServiceImpl implements FileService {
         }else{
             return null;
         }
+
+
 
     }
 

@@ -10,6 +10,15 @@ public class FileInfo {
     private String fileName;
     private String suffix;
     private String filePath;
+    private String suffixName;
+
+    public String getSuffixName() {
+        return suffixName;
+    }
+
+    public void setSuffixName(String suffixName) {
+        this.suffixName = suffixName;
+    }
 
     public FileInfo() {
     }

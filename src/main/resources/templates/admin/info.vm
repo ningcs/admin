@@ -25,6 +25,7 @@
           <div class="tips"></div>
         </div>
       </div>
+
       <div class="form-group">
         <div class="label">
           <label>网站LOGO：</label>
@@ -33,7 +34,9 @@
 
           <input type="button" class="button bg-blue margin-left" id="image1" value="+ 浏览上传" onchange="updateLoadImg()">
         </div>
+          <img id="previewImg" width="300" height="200" margin="auto" alt="">
       </div>
+
       <div class="form-group">
         <div class="label">
           <label>网站域名：</label>
@@ -187,12 +190,29 @@
     //在实例对象上调用init()方法进行初始化
     uploader.init();
     //图片选择完毕触发
-    uploader.bind('FilesAdded',function(uploader,files){
+    uploader.bind('FilesAdded',function(uploader,file){
 //        alert('图片选择完毕触发');
         uploader.start();
     });
     //图片上传成功触发，ps:data是返回值（第三个参数是返回值）
-    uploader.bind('FileUploaded',function(uploader,files,data){
+    uploader.bind('FileUploaded',function(uploader,file,data){
+        var MD5 = JSON.parse(data.response).response.fileMD5;
+        console.log(data);
+        $.ajax({
+            url: '/common/getFile',
+            data:{fileMD5: MD5},
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data)
+                $('#previewImg').prop('src', 'data:image/'+data.response.suffixName+';base64,' + data.response.base64String);
+            },
+            error: function () {
+                alert('出错！');
+            }
+        })
+//        $('#previewImg').prop('src','');
+
     });
     //会在文件上传过程中不断触发，可以用此事件来显示上传进度监听（比如说上传进度）
     uploader.bind('UploadProgress',function(uploader,file){

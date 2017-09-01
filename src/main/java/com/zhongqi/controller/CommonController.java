@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -60,6 +62,7 @@ public class CommonController {
         Map<String, Object> resultMap = new HashMap<>();
 
         HttpSession session = request.getSession();
+        // TODO: 2017/9/1 验证码为abcd
 //        String captchaToken = (String) session.getAttribute("captchaToken");
         String captchaToken ="abcd";
         this.logger.info("captcha input:" + captcha);
@@ -86,32 +89,33 @@ public class CommonController {
         return new ResponseResult(ResponseResult.ERROR,"输入验证码错误",resultMap);
     }
 
-
+    //上传文件
+    @ResponseBody
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
-    public ResponseResult upload(String base64String, String contentType, String fileName, String suffix,
-                                 HttpServletRequest request, HttpServletResponse response) {
+    public ResponseResult upload(MultipartFile file,HttpServletRequest request, HttpServletResponse response) throws Exception{
         ResponseResult result = new ResponseResult();
+        if (!file.isEmpty()){
+            FileInfo fileInfo = new FileInfo();
+            BASE64Encoder encoder = new BASE64Encoder();
+            String name =file.getOriginalFilename();
+            fileInfo.setBase64String(encoder.encode(file.getBytes()));
+            fileInfo.setContentType(file.getContentType());
+            fileInfo.setFileName(name);
+            fileInfo.setSuffix("."+name.substring(name.lastIndexOf(".")+1));
+            fileInfo = fileService.saveFile(fileInfo);
 
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setBase64String(base64String);
-        fileInfo.setContentType(contentType);
-        fileInfo.setFileName(fileName);
-        fileInfo.setSuffix(suffix);
+            String fileMD5 = fileInfo.getFileMD5();
 
-        fileInfo = fileService.saveFile(fileInfo);
-
-        String fileMD5 = fileInfo.getFileMD5();
-
-        if(fileMD5==null || "".equals(fileMD5.trim())){
-            result = ResponseResult.errorResult("保存文件失败！");
-        }else{
-            result = new ResponseResult(ResponseResult.SUCCESS,"保存文件成功！",fileInfo);
+            if(fileMD5==null || "".equals(fileMD5.trim())){
+                result = ResponseResult.errorResult("保存文件失败！");
+            }else{
+                result = new ResponseResult(ResponseResult.SUCCESS,"保存文件成功！",fileInfo);
+            }
         }
-
         return result;
     }
-
-    @RequestMapping(value = "/getFile",method = {RequestMethod.POST,RequestMethod.GET})
+    @ResponseBody
+    @RequestMapping(value = "/getFile",method = {RequestMethod.POST})
     public ResponseResult getFile(String fileMD5, HttpServletRequest request, HttpServletResponse response){
         ResponseResult result = new ResponseResult();
 
@@ -152,5 +156,12 @@ public class CommonController {
         response.setDateHeader("Date", time);
         response.setDateHeader("Expires", time);
     }
+//    private String getSuffix (String filName){
+//        String[] name=filName.split(".");
+//        for (){
+//
+//        }
+//
+//    }
 
 }
