@@ -1,5 +1,6 @@
 package com.zhongqi.util;
 
+
 import org.patchca.background.BackgroundFactory;
 import org.patchca.color.ColorFactory;
 import org.patchca.filter.predefined.*;

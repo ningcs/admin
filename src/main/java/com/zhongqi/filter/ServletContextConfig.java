@@ -28,8 +28,7 @@
 //        configurer.enable();
 //    }
 //
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
+//    @Override//    public void addInterceptors(InterceptorRegistry registry) {
 //        registry.addInterceptor(loginInterceptor())
 //                .addPathPatterns("/**")
 //                .excludePathPatterns("/login/**")
