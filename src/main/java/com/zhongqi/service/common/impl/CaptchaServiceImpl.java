@@ -1,7 +1,7 @@
-package com.zhongqi.service.impl;
+package com.zhongqi.service.common.impl;
 
-import com.zhongqi.dto.CaptchaInfo;
-import com.zhongqi.service.CaptchaService;
+import com.zhongqi.dto.common.CaptchaInfo;
+import com.zhongqi.service.common.CaptchaService;
 import com.zhongqi.util.CaptchaUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Service;

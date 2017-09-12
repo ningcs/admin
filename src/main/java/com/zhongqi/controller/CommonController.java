@@ -1,9 +1,9 @@
 package com.zhongqi.controller;
 
-import com.zhongqi.dto.CaptchaInfo;
-import com.zhongqi.dto.FileInfo;
-import com.zhongqi.service.CaptchaService;
-import com.zhongqi.service.FileService;
+import com.zhongqi.dto.common.CaptchaInfo;
+import com.zhongqi.dto.common.FileInfo;
+import com.zhongqi.service.common.CaptchaService;
+import com.zhongqi.service.common.FileService;
 import com.zhongqi.util.ResponseResult;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

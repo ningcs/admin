@@ -1,4 +1,4 @@
-package com.zhongqi.dto;
+package com.zhongqi.dto.common;
 
 /**
  * Created by ningcs on 2017/8/31.

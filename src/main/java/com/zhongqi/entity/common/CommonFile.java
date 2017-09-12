@@ -1,4 +1,4 @@
-package com.zhongqi.entity;
+package com.zhongqi.entity.common;
 
 import javax.persistence.*;
 import java.util.Date;

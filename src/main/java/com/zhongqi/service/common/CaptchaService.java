@@ -1,6 +1,6 @@
-package com.zhongqi.service;
+package com.zhongqi.service.common;
 
-import com.zhongqi.dto.CaptchaInfo;
+import com.zhongqi.dto.common.CaptchaInfo;
 
 /**
  * Created by songrenfei on 2017/2/20.

@@ -1,9 +1,9 @@
-package com.zhongqi.service.impl;
+package com.zhongqi.service.common.impl;
 
-import com.zhongqi.dao.CommonFileDao;
-import com.zhongqi.dto.FileInfo;
-import com.zhongqi.entity.CommonFile;
-import com.zhongqi.service.FileService;
+import com.zhongqi.dao.common.CommonFileDao;
+import com.zhongqi.dto.common.FileInfo;
+import com.zhongqi.entity.common.CommonFile;
+import com.zhongqi.service.common.FileService;
 import com.zhongqi.util.BaseUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;

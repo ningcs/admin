@@ -1,7 +1,7 @@
-package com.zhongqi.service;
+package com.zhongqi.service.common;
 
 
-import com.zhongqi.dto.FileInfo;
+import com.zhongqi.dto.common.FileInfo;
 
 public interface FileService {
 

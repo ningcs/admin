@@ -1,4 +1,4 @@
-package com.zhongqi.dto;
+package com.zhongqi.dto.common;
 
 /**
  * Created by songrenfei on 2017/5/22.

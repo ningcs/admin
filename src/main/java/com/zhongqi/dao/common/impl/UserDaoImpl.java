@@ -1,7 +1,7 @@
-package com.zhongqi.dao.impl;
+package com.zhongqi.dao.common.impl;
 
-import com.zhongqi.dao.UserDao;
-import com.zhongqi.entity.User;
+import com.zhongqi.dao.common.UserDao;
+import com.zhongqi.entity.common.User;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

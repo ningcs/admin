@@ -12,7 +12,7 @@ public class AdminPageController {
 
     //登录页面
     @RequestMapping("/login")
-    public String getLoginPage(){
+    public  String getLoginPage(){
         return "login/login";
     }
 

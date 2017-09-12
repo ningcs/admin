@@ -1,8 +1,8 @@
-package com.zhongqi.dao.impl;
+package com.zhongqi.dao.common.impl;
 
-import com.zhongqi.dao.CommonFileDao;
-import com.zhongqi.dto.FileInfo;
-import com.zhongqi.entity.CommonFile;
+import com.zhongqi.dao.common.CommonFileDao;
+import com.zhongqi.dto.common.FileInfo;
+import com.zhongqi.entity.common.CommonFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

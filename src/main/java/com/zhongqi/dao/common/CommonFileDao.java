@@ -1,7 +1,7 @@
-package com.zhongqi.dao;
+package com.zhongqi.dao.common;
 
-import com.zhongqi.dto.FileInfo;
-import com.zhongqi.entity.CommonFile;
+import com.zhongqi.dto.common.FileInfo;
+import com.zhongqi.entity.common.CommonFile;
 
 /**
  * Created by ningcs on 2017/9/1.

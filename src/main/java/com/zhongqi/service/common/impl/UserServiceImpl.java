@@ -1,8 +1,8 @@
-package com.zhongqi.service.impl;
+package com.zhongqi.service.common.impl;
 
-import com.zhongqi.dao.UserDao;
-import com.zhongqi.entity.User;
-import com.zhongqi.service.UserService;
+import com.zhongqi.dao.common.UserDao;
+import com.zhongqi.entity.common.User;
+import com.zhongqi.service.common.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
-package com.zhongqi.dao;
+package com.zhongqi.dao.common;
 
-import com.zhongqi.entity.User;
+import com.zhongqi.entity.common.User;
 
 /**
  * Created by ningcs on 2017/8/30.
