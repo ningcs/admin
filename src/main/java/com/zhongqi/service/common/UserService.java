@@ -7,4 +7,6 @@ import com.zhongqi.entity.common.User;
  */
 public interface UserService {
     public User login(String name, String password);
+    //修改密码
+    public void updatePassword(String password,Integer userId);
 }

@@ -74,7 +74,7 @@ public class AdminController {
     }
 
 
-    //添加网站
+    //2.添加网站
     @ApiOperation(value = "2",notes = "添加网站")
     @RequestMapping(value = "/addwebSite",method = RequestMethod.POST)
     @ApiImplicitParams({
@@ -118,6 +118,10 @@ public class AdminController {
         return ResponseResult.errorResult("添加失败，请稍后重新添加");
 
     }
+
+
+
+
 
     private WebSiteInfo addWebSiteInfo(String webTitle, //网站
                                        String webLogo, //网站logo

@@ -2,6 +2,7 @@ package com.zhongqi.dao.common.impl;
 
 import com.zhongqi.dao.common.UserDao;
 import com.zhongqi.entity.common.User;
+import com.zhongqi.util.SHA256;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -32,5 +33,14 @@ public class UserDaoImpl implements UserDao {
             e.printStackTrace();
         }
         return user;
+    }
+
+    @Override
+    public void updatePassword(String password,Integer userId) {
+        Map<String,Object> params =new HashedMap();
+        String sql="update User set password=:password where id=:userId";
+        params.put("userId",userId);
+        params.put("password", SHA256.encrypt(password));
+        jdbcTemplate.update(sql,params);
     }
 }

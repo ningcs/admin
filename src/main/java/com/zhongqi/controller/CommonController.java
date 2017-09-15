@@ -2,9 +2,15 @@ package com.zhongqi.controller;
 
 import com.zhongqi.dto.common.CaptchaInfo;
 import com.zhongqi.dto.common.FileInfo;
+import com.zhongqi.entity.common.User;
 import com.zhongqi.service.common.CaptchaService;
 import com.zhongqi.service.common.FileService;
+import com.zhongqi.service.common.UserService;
 import com.zhongqi.util.ResponseResult;
+import com.zhongqi.util.SHA256;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -35,6 +41,9 @@ public class CommonController {
 
     @Autowired
     private FileService fileService;
+
+    @Autowired
+    private UserService userService;
 
     //生成验证码 ok 0522
     @RequestMapping("/createCaptcha")
@@ -129,7 +138,7 @@ public class CommonController {
 
         return result;
     }
-
+    //获取文件
     @RequestMapping(value = "/getFileInfo",method = {RequestMethod.POST,RequestMethod.GET})
     public FileInfo getFileInfo(String fileMD5, HttpServletRequest request, HttpServletResponse response){
         ResponseResult result = new ResponseResult();
@@ -143,6 +152,31 @@ public class CommonController {
         }
 
         return fileInfo;
+    }
+
+    //3.修改密码
+    @ApiOperation(value = "3.修改密码",notes = "3.修改密码")
+    @RequestMapping(value = "/updatePassword",method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "oldPassword", paramType = "query",value = "老密码", required = true, dataType = "String",defaultValue = "123456"),
+            @ApiImplicitParam(name = "newPassword", paramType = "query",value = "新密码", required = true, dataType = "String",defaultValue = "12345678"),
+            @ApiImplicitParam(name = "verifyPassword", paramType = "query",value = "确认密码", required = true, dataType = "String",defaultValue = "12345678"),
+    })
+    @ResponseBody
+    public ResponseResult updatePassword(HttpServletRequest request,
+                                         String oldPassword, //老密码
+                                         String newPassword //新密码
+    ) {
+        User user =(User) request.getSession().getAttribute("user");
+        if (oldPassword==null && "".equals(oldPassword)){
+            return ResponseResult.errorResult("旧密码为空");
+        }else if(!user.getPassword().equals(SHA256.encrypt(oldPassword))){
+            return ResponseResult.errorResult("旧密码输入错误");
+        }
+        userService.updatePassword(newPassword,user.getId());
+        request.getSession().invalidate();
+        return ResponseResult.successResult("密码修改成功");
+
     }
 
 
