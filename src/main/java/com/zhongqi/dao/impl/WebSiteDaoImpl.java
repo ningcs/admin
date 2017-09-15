@@ -2,7 +2,7 @@ package com.zhongqi.dao.impl;
 
 import com.zhongqi.dao.WebSiteDao;
 import com.zhongqi.dto.WebSiteInfo;
-import com.zhongqi.util.ResponseResult;
+import com.zhongqi.entity.PageManage;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -46,5 +46,10 @@ public class WebSiteDaoImpl implements WebSiteDao{
 
     }
 
+    @Override
+    public void addPageManage(PageManage pageManage) {
+        Map<String,Object> params =new HashedMap();
+        String sql ="insert into PageManage values (headline, pageImgMd5, content, createDateTime, status)";
 
+    }
 }
