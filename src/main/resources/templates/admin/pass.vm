@@ -22,7 +22,7 @@
         </div>
         <div class="field">
           <label style="line-height:33px;">
-           admin
+           ${Session.user.name}
           </label>
         </div>
       </div>      
@@ -74,7 +74,7 @@
             success: function (json) {
                 if (json.code == 0) {
                     alert(json.msg);
-                    window.location.reload();//刷新当前页面
+                    parent.location.reload();//刷新当前页面
                 } else {
                     alert(json.msg);
                 }
