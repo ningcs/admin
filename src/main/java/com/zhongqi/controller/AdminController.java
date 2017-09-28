@@ -1,6 +1,8 @@
 package com.zhongqi.controller;
 
+import com.zhongqi.dto.PageManageInfo;
 import com.zhongqi.dto.WebSiteInfo;
+import com.zhongqi.entity.PageManage;
 import com.zhongqi.entity.common.User;
 import com.zhongqi.service.WebSiteService;
 import com.zhongqi.service.common.UserService;
@@ -9,6 +11,7 @@ import com.zhongqi.util.SHA256;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * Created by ningcs on 2017/8/25.
@@ -92,7 +96,8 @@ public class AdminController {
             @ApiImplicitParam(name = "address", paramType = "query",value = "地址", required = true, dataType = "String",defaultValue = "东城区"),
             @ApiImplicitParam(name = "webstat", paramType = "query",value = "底部信息", required = true, dataType = "String",defaultValue = "京公网安备11000002000001号"),
     })
-    public ResponseResult addwebSite(String webTitle, //网站
+    public ResponseResult addwebSite(HttpServletRequest request,
+                                     String webTitle, //网站
                                      String webLogo, //网站logo
                                      String domainName, //域名
                                      String Keyword,//关键字
@@ -108,7 +113,8 @@ public class AdminController {
     ) {
 
         WebSiteInfo webSiteInfo =null;
-        webSiteInfo=this.addWebSiteInfo(webTitle,webLogo, domainName, Keyword,
+        Integer userId=getUserId(request);
+        webSiteInfo=this.addWebSiteInfo(userId,webTitle,webLogo, domainName, Keyword,
                 webDescription, contactPeople, CompanyPhone,
                 mobile, email, qq, faxes, address, webstat);
         if (webSiteInfo!=null){
@@ -120,10 +126,54 @@ public class AdminController {
     }
 
 
+    //3.添加单页网站信息
+    @ApiOperation(value = "3.添加单页网站信息",notes = "3.添加单页网站信息")
+    @RequestMapping(value = "/addPageManage",method = RequestMethod.POST)
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "content", paramType = "query",value = "内容", required = true, dataType = "String",defaultValue = "新闻"),
+            @ApiImplicitParam(name = "headline", paramType = "query",value = "标题", required = true, dataType = "String",defaultValue = "10bdc189151784c1041338b1466c8709"),
+            @ApiImplicitParam(name = "pageImgMd5", paramType = "query",value = "图片MD5", required = true, dataType = "String",defaultValue = "ningcs.com"),
+    })
+    public ResponseResult addPageManage(HttpServletRequest request,
+                                     String headline, //标题
+                                     String pageImgMd5, //图片MD5
+                                     String content //内容
+    ) {
+        Integer userId=getUserId(request);
+        WebSiteInfo webSiteInfo=webSiteService.getWebSiteInfo(userId);
+        PageManage pageManage =new PageManage();
+        pageManage.setWebSiteId(webSiteInfo.getId());
+        pageManage.setContent(content);
+        pageManage.setHeadline(headline);
+        pageManage.setPageImgMd5(pageImgMd5);
+        if (pageManage!=null){
+            webSiteService.addPageManage(pageManage);
+            return ResponseResult.successResult("添加网站成功");
+        }
+        return ResponseResult.errorResult("添加失败，请稍后重新添加");
+
+    }
+
+
+    //4.获取单页网站信息
+    @ApiOperation(value = "4.获取单页网站信息",notes = "4.获取单页网站信息")
+    @RequestMapping(value = "/getPageManageInfo",method = {RequestMethod.POST,RequestMethod.GET})
+    public ResponseResult getPageManageInfo(HttpServletRequest request) {
+//        Integer userId=getUserId(request);
+        Map<String,Object> map =new HashedMap();
+        WebSiteInfo webSiteInfo=webSiteService.getWebSiteInfo(1);
+        PageManageInfo pageManageInfo =null;
+        if (webSiteInfo!=null){
+            map =webSiteService.getPageManageInfo(webSiteInfo.getId(),1,20);
+        }
+        return new ResponseResult(ResponseResult.SUCCESS,"获取网站列表成功",map);
+    }
 
 
 
-    private WebSiteInfo addWebSiteInfo(String webTitle, //网站
+
+    private WebSiteInfo addWebSiteInfo(Integer userId,
+                                       String webTitle, //网站
                                        String webLogo, //网站logo
                                        String domainName, //域名
                                        String Keyword,//关键字
@@ -139,6 +189,7 @@ public class AdminController {
     ) {
 
         WebSiteInfo webSiteInfo = new WebSiteInfo();
+        webSiteInfo.setUserId(userId);
         webSiteInfo.setWebTitle(webTitle);
         webSiteInfo.setEmail(email);
         webSiteInfo.setAddress(address);
@@ -153,5 +204,13 @@ public class AdminController {
         webSiteInfo.setWebLogo(webLogo);
         webSiteInfo.setWebstat(webstat);
         return webSiteInfo;
+    }
+    private Integer getUserId(HttpServletRequest request){
+        Integer userId=0;
+        User user=(User)request.getSession().getAttribute("user");
+        if (user!=null){
+            userId=user.getId();
+        }
+        return userId;
     }
 }

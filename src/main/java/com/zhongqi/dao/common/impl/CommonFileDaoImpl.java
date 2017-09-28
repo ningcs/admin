@@ -4,6 +4,7 @@ import com.zhongqi.dao.common.CommonFileDao;
 import com.zhongqi.dto.common.FileInfo;
 import com.zhongqi.entity.common.CommonFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -44,8 +45,8 @@ public class CommonFileDaoImpl implements CommonFileDao{
         CommonFile commonFile =null;
         try {
             commonFile =jdbcTemplate.queryForObject(sql,params,new BeanPropertyRowMapper<CommonFile>(CommonFile.class));
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch (EmptyResultDataAccessException e){
+            return null;
         }
         return commonFile;
     }

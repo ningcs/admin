@@ -5,6 +5,7 @@ package com.zhongqi.dto;
  */
 public class WebSiteInfo {
     private Integer id;
+    private Integer userId;
     private String webTitle; //网站标题
     private String webLogo; //网站logo
     private String domainName; //域名
@@ -18,6 +19,23 @@ public class WebSiteInfo {
     private String faxes;//传真
     private String address;//地址
     private String webstat;//底部信息
+    private String createDateStr;
+
+    public String getCreateDateStr() {
+        return createDateStr;
+    }
+
+    public void setCreateDateStr(String createDateStr) {
+        this.createDateStr = createDateStr;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Integer getId() {
         return id;

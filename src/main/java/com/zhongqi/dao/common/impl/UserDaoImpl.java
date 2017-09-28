@@ -5,6 +5,7 @@ import com.zhongqi.entity.common.User;
 import com.zhongqi.util.SHA256;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,8 +30,8 @@ public class UserDaoImpl implements UserDao {
         User user =null;
         try {
             user =jdbcTemplate.queryForObject(sql,params,new BeanPropertyRowMapper<User>(User.class));
-        }catch (Exception e){
-            e.printStackTrace();
+        }catch (EmptyResultDataAccessException e){
+            return null;
         }
         return user;
     }
