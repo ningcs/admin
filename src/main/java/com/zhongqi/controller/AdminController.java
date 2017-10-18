@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -167,6 +169,30 @@ public class AdminController {
             map =webSiteService.getPageManageInfo(webSiteInfo.getId(),1,20);
         }
         return new ResponseResult(ResponseResult.SUCCESS,"获取网站列表成功",map);
+    }
+
+    //4.获取城市信息
+    @ApiOperation(value = "4.获取城市信息",notes = "4.获取城市信息")
+    @RequestMapping(value = "/getCityList",method = {RequestMethod.POST,RequestMethod.GET})
+    public ResponseResult getCityList(HttpServletRequest request,String cityCode) {
+        Map<String,Object> map =new HashedMap();
+        List<String> list =new ArrayList<>();
+        List<String> list1 =new ArrayList<>();
+        if (cityCode!=null && "101".equals(cityCode)){
+            list.add("北京");
+            list.add("上海");
+            list.add("石家庄");
+            list.add("郑州");
+            list.add("吉林");
+            list1.add("2017年10月10日");
+            list1.add("2017年10月11日");
+            list1.add("2017年10月12日");
+            map.put("placeList",list);
+            map.put("dayList",list1);
+            return new ResponseResult(ResponseResult.SUCCESS,"获取网站列表成功",map);
+        }
+        return ResponseResult.errorResult("error");
+
     }
 
 

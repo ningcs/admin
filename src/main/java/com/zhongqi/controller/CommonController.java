@@ -1,6 +1,5 @@
 package com.zhongqi.controller;
 
-import com.zhongqi.dto.common.CaptchaInfo;
 import com.zhongqi.dto.common.FileInfo;
 import com.zhongqi.entity.common.User;
 import com.zhongqi.service.common.CaptchaService;
@@ -8,12 +7,12 @@ import com.zhongqi.service.common.FileService;
 import com.zhongqi.service.common.UserService;
 import com.zhongqi.util.ResponseResult;
 import com.zhongqi.util.SHA256;
+import com.zhongqi.util.ValidateCodeUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,17 +47,13 @@ public class CommonController {
     //生成验证码 ok 0522
     @RequestMapping("/createCaptcha")
     public void createCaptcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        CaptchaInfo captchaInfo = captchaService.createCaptcha();
-        String token = captchaInfo.getToken();
-        String base64String = captchaInfo.getBase64String();
 
-        token = captchaInfo.getToken();
-        HttpSession session = request.getSession(true);
-        session.setAttribute("captchaToken", token);
-
-        byte[] fileBytes = Base64.decodeBase64(base64String);
-        response.getOutputStream().write(fileBytes);
-
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+        HttpSession session = request.getSession();
+        ValidateCodeUtil vCode = new ValidateCodeUtil(160,40,5,100);
+        session.setAttribute("captchaToken", vCode.getCode());
+        vCode.write(response.getOutputStream());
         setResponseHeaders(response);
     }
 
@@ -182,8 +177,9 @@ public class CommonController {
 
 
     protected void setResponseHeaders(HttpServletResponse response) {
-        response.setContentType("image/png");
-        response.setHeader("Cache-Control", "no-cache, no-store");
+        // 设置响应的类型格式为图片格式
+        response.setContentType("image/jpeg");
+        //禁止图像缓存。
         response.setHeader("Pragma", "no-cache");
         long time = System.currentTimeMillis();
         response.setDateHeader("Last-Modified", time);
